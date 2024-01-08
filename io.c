@@ -166,9 +166,9 @@ void run_transfo_file(FILE *tf)
 	char dest[FNMAX];
 	int light;
 #ifdef USE_CLOCK
-	double total = 0;
-#else
 	clock_t total = 0;
+#else
+	double total = 0;
 #endif
 	while (fscanf(tf, "%s %s %d %s", source, curve, &light, dest) == 4) {
 		printf("%s %s %d %s\n", source, curve, light, dest);
@@ -176,7 +176,7 @@ void run_transfo_file(FILE *tf)
 	}
 
 #ifdef USE_CLOCK
-	printf("TOTAL: %f clock cycles.\n", total);
+	printf("TOTAL: %ld clock cycles.\n", total);
 #else
 	printf("TOTAL: %f clock cycles.\n", total);
 #endif
