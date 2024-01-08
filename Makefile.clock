@@ -1,0 +1,7 @@
+CPPFLAGS = -DUSE_CLOCK
+transform_image: io.o transfo.o
+	$(CC) -o $@ $^
+io.o: transfo.h
+clean:
+	rm -f *.o transform_image
+	rm -fr cmake-build-debug
