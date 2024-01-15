@@ -1,8 +1,8 @@
-#CFLAGS = -O3
+CFLAGS = -Wall -O3 -fopenmp
 run: transform_image
-	time ./transform_image ../data/transfo.txt > ./performance/test.txt
+	time ./transform_image ../data/transfo.txt
 transform_image: io.o transfo.o cycles.o
-	$(CC) -o $@ $^
+	${CC} ${CFLAGS} -o $@ $^
 io.o: transfo.h cycles.h
 clean:
 	rm -f *.o transform_image
