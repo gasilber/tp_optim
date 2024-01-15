@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <libgen.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 #include "transfo.h"
 #ifdef USE_CLOCK
@@ -59,7 +60,7 @@ void write_image(char *dest, unsigned char *img, long size, int width, int heigh
 clock_t transform_image(char *source, char *curve, int light, char *dest)
 #else
 double transform_image(char *source, char *curve, int light, char *dest)
-#endif	
+#endif
 {
 	FILE *in;
 	FILE *map;
@@ -170,10 +171,37 @@ void run_transfo_file(FILE *tf)
 #else
 	double total = 0;
 #endif
+	int pipefd[2];
+    if (pipe(pipefd) == -1){
+        perror("pipe");
+        exit(EXIT_FAILURE);
+    }
+
 	while (fscanf(tf, "%s %s %d %s", source, curve, &light, dest) == 4) {
 		printf("%s %s %d %s\n", source, curve, light, dest);
-		total += transform_image(source, curve, light, dest);
+
+		pid_t pid = fork();
+		if (pid == -1){
+            perror("fork");
+            exit(EXIT_FAILURE);
+        }
+		else if (pid == 0){
+            double child_total = transform_image(source, curve, light, dest);
+			write(pipefd[1], &child_total, sizeof(child_total));
+            close(pipefd[1]);
+            exit(EXIT_SUCCESS);
+        }
 	}
+
+	close(pipefd[1]);
+    double child_total;
+    while (read(pipefd[0], &child_total, sizeof(child_total)) > 0)
+    {
+        total += child_total;
+    }
+    close(pipefd[0]);
+
+	while (wait(NULL) > 0){}
 
 #ifdef USE_CLOCK
 	printf("TOTAL: %ld clock cycles.\n", total);
