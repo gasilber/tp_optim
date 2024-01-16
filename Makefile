@@ -1,6 +1,6 @@
 #CFLAGS = -O3
 transform_image: io.o transfo.o cycles.o
-	$(CC) -o $@ $^
+	$(CC) -Ofast -o $@ $^
 io.o: transfo.h cycles.h
 clean:
 	rm -f *.o transform_image

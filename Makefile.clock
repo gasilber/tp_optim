@@ -1,6 +1,6 @@
-CPPFLAGS = -DUSE_CLOCK
+CPPFLAGS = -DUSE_CLOCK -Ofast -msse -march=native
 transform_image: io.o transfo.o
-	$(CC) -o $@ $^
+	$(CC) -Ofast -march=native -msse -o $@ $^
 io.o: transfo.h
 clean:
 	rm -f *.o transform_image
