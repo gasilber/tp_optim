@@ -46,7 +46,7 @@ void transfo(int w, int h, unsigned char *src,
 	register int i,j;
   	register unsigned char* current;
 
-	#pragma omp parallel for collapse(2) num_threads(9)
+	// #pragma omp parallel for collapse(2) num_threads(9)
   	for (i = 0; i < w; i++) {
 		for (j = 0; j < h; j++) {
 			// dest[j * w + i] = src[j * w + i];

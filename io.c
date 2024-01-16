@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <libgen.h>
 #include <unistd.h>
+#include <sys/wait.h>
+#include <sys/types.h>
 
 #include "transfo.h"
 #ifdef USE_CLOCK
@@ -170,9 +172,34 @@ void run_transfo_file(FILE *tf)
 #else
 	double total = 0;
 #endif
+
+	// while (fscanf(tf, "%s %s %d %s", source, curve, &light, dest) == 4) {
+	// 	printf("%s %s %d %s\n", source, curve, light, dest);
+	// 	total += transform_image(source, curve, light, dest);
+	// }
+	
+    // int total = 0;
+    pid_t pid;
 	while (fscanf(tf, "%s %s %d %s", source, curve, &light, dest) == 4) {
-		printf("%s %s %d %s\n", source, curve, light, dest);
-		total += transform_image(source, curve, light, dest);
+        printf("%s %s %d %s\n", source, curve, light, dest);
+
+        pid = fork();
+
+        if (pid == -1) {
+            perror("Error in fork");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) { // Child process
+            int result = transform_image(source, curve, light, dest);
+            exit(result);  // Exit with the result of the transformation
+        }
+    }
+
+	if (pid != 0) { // Parent process
+		while (pid != wait(0)) {
+			// int status;
+			// waitpid(pid, &status, 0);
+			// total += WEXITSTATUS(status);  // Retrieve the exit status of the child process
+		}
 	}
 
 #ifdef USE_CLOCK
