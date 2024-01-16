@@ -1,3 +1,5 @@
+#include<omp.h>
+
 void copy (int w, int h, unsigned char *src, unsigned char *dest)
 {
 	int i,j;
@@ -44,6 +46,7 @@ void transfo(int w, int h, unsigned char *src,
 	register int i,j;
   	register unsigned char* current;
 
+	#pragma omp parallel for collapse(2) num_threads(13)
   	for (i = 0; i < w; i++) {
 		for (j = 0; j < h; j++) {
 			// dest[j * w + i] = src[j * w + i];
