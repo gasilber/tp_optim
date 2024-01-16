@@ -1,1 +1,3 @@
 https://stackoverflow.com/questions/14492436/g-optimization-beyond-o3-ofast
+https://stackoverflow.com/questions/16699247/what-is-a-cache-friendly-code
+

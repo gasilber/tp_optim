@@ -41,8 +41,8 @@ void transfo(int w, int h, unsigned char *src,
   	// copy(w, h, src, dest);
   	// curve(w, h, dest, lut);
   	// light(w, h, dest, val);
-	int i,j;
-  	unsigned char current;
+	register int i,j;
+  	register unsigned char* current;
 
   	for (i = 0; i < w; i++) {
 		for (j = 0; j < h; j++) {
@@ -50,12 +50,12 @@ void transfo(int w, int h, unsigned char *src,
   			// current = dest[j * w + i];
 			// dest[j * w + i] = lut[current];
 			// current = dest[j * w + i];
-			current = lut[src[j * w + i]];
+			current = &lut[src[j * w + i]];
 			// dest[j * w + i] = (((int) current + val) > 255) ? 255 : current + val;
-			if (((short) current + val) > 255)
+			if (((short) *current + val) > 255)
 				dest[j * w + i] = 255;
 			else
-				dest[j * w + i] = current + val;
+				dest[j * w + i] = *current + val;
 		}
 	}
 }
