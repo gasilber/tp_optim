@@ -1,4 +1,4 @@
-CPPFLAGS = -DUSE_CLOCK
+CPPFLAGS = -DUSE_CLOCK_ONLY
 transform_image: io.o transfo.o
 	$(CC) -o $@ $^
 io.o: transfo.h
